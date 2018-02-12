@@ -57,7 +57,7 @@ int main() {
 	//ESTABLECER CONEXION
 	sf::IpAddress ip = sf::IpAddress::getLocalAddress();
 	sf::TcpSocket socket;
-	char connectionType, mode, protocol;
+	char connectionType, mode, prot;
 	string sendText;
 	size_t received;
 	string text1 = "Connected to: ";
@@ -67,7 +67,8 @@ int main() {
 
 	if (connectionType == 's') {
 		cout << "\nPROTOCOL\n- (1) for Threading\n- (2) for NonBlocking\n- (3) for SocketSelector\n\nYour selection: ";
-		cin >> protocol;
+		cin >> prot;
+		int type = (int)prot;
 
 		sf::TcpListener listener;
 		listener.listen(PORT);
@@ -76,7 +77,7 @@ int main() {
 		mode = 's';
 		listener.close();
 
-		sf::Socket::Status status = socket.send(&protocol, sizeof(char));
+		sf::Socket::Status status = socket.send(&prot, sizeof(char));
 		if (status != sf::Socket::Done) {
 			//Ha fallado el envío de datos
 		}
@@ -96,11 +97,13 @@ int main() {
 			int type = (int)protocolType;
 			switch (type) {
 			case 1: //Threading
-				cout << protocolType;
+				myProtocol = Threading;
 				break;
 			case 2: //NonBlocking
+				myProtocol = NonBlocking;
 				break;
 			case 3: //SocketSelector
+				myProtocol = SocketSelector;
 				break;
 			default:
 				//Error en el tipo de protocolo
@@ -144,6 +147,16 @@ int main() {
 #pragma endregion
 
 #pragma region InteractionLoop
+	switch (myProtocol) {
+	case Threading:
+		break;
+	case NonBlocking:
+		break;
+	case SocketSelector:
+		break;
+	default:
+		break;
+	}
 	while (window.isOpen()) {
 		sf::Event evento;
 		while (window.pollEvent(evento)) {
