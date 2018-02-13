@@ -97,13 +97,13 @@ int main() {
 			int type = (int)protocolType;
 			switch (type) {
 			case 1: //Threading
-				myProtocol = Threading;
+				//myProtocol = Threading;
 				break;
 			case 2: //NonBlocking
-				myProtocol = NonBlocking;
+				//myProtocol = NonBlocking;
 				break;
 			case 3: //SocketSelector
-				myProtocol = SocketSelector;
+				//myProtocol = SocketSelector;
 				break;
 			default:
 				//Error en el tipo de protocolo
@@ -147,7 +147,7 @@ int main() {
 #pragma endregion
 
 #pragma region InteractionLoop
-	switch (myProtocol) {
+	/*switch (myProtocol) {
 	case Threading:
 		break;
 	case NonBlocking:
@@ -156,7 +156,7 @@ int main() {
 		break;
 	default:
 		break;
-	}
+	}*/
 	while (window.isOpen()) {
 		sf::Event evento;
 		while (window.pollEvent(evento)) {
