@@ -1,4 +1,9 @@
 #include <SFML\Network.hpp>
+#include <string>
+#include <iostream>
+#include <vector>
+#include <thread>
+#include "Utils.hpp"
 
 class Protocol {
 public:
