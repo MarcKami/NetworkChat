@@ -120,8 +120,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Source\Main.cpp" />
+    <ClCompile Include="Source\Protocol.cpp" />
+    <ClCompile Include="Source\Threading.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Protocol.h" />
+    <ClInclude Include="Source\Threading.h" />
     <ClInclude Include="Source\Utils.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
