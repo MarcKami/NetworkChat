@@ -1,3 +1,4 @@
+#pragma once
 #include <SFML\Network.hpp>
 #include <SFML\Graphics.hpp>
 #include <iostream>
@@ -15,9 +16,7 @@ public:
 	~Protocol();
 
 	virtual void Run();
-private:
 
 protected:
 	sf::TcpSocket* socket;
-	vector<pair<string, originText>>* aMensajes;
 };

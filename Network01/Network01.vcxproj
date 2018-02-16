@@ -120,10 +120,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Source\Main.cpp" />
+    <ClCompile Include="Source\NonBlocking.cpp" />
     <ClCompile Include="Source\Protocol.cpp" />
     <ClCompile Include="Source\Threading.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\NonBlocking.h" />
     <ClInclude Include="Source\Protocol.h" />
     <ClInclude Include="Source\Threading.h" />
     <ClInclude Include="Source\Utils.hpp" />

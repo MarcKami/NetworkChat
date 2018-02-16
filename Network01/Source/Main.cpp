@@ -1,6 +1,7 @@
 #include "Threading.h"
+#include "NonBlocking.h"
 
-int main() {
+void main() {
 
 #pragma region Connection
 	//ESTABLECER CONEXION
@@ -20,47 +21,44 @@ int main() {
 		sf::TcpListener listener;
 		listener.listen(PORT);
 		listener.accept(socket);
-		text1 += "Client";
+		text1 += "Client\n";
 		cout << text1;
 		mode = 's';
 		listener.close();
 
 		sf::Socket::Status status = socket.send(&prot, sizeof(char));
 		if (status != sf::Socket::Done) {
-			//Ha fallado el envío de datos
+			cout << "Ha fallado el envio de datos\n";
 		}
 	}
 	else if (connectionType == 'c') {
 		socket.connect(ip, PORT);
-		text1 += "Server";
+		text1 += "Server\n";
 		cout << text1;
 		mode = 'r';
 
 		size_t protocolLength;
 		sf::Socket::Status status = socket.receive(&prot, MAX_LENGTH, protocolLength);
 		if (status != sf::Socket::Done) {
-			//Ha fallado la recepción de datos
+			cout << "Ha fallado la recepcion de datos\n";
 		}
 	}
 #pragma endregion
 
 	switch (prot) {
 	case '1': //Threading
-		protocol = Threading(&socket);
+		//protocol = Threading(&socket);
 		break;
 	case '2': //NonBlocking
-				//myProtocol = NonBlocking;
+		protocol = NonBlocking(&socket);
 		break;
 	case '3': //SocketSelector
-				//myProtocol = SocketSelector;
+		//myProtocol = SocketSelector;
 		break;
 	default:
-		//Error en el tipo de protocolo
+		cout << "Error en el tipo de protocolo!\n";
 		break;
 	}
-
-
-
 
 	protocol.Run();
 
