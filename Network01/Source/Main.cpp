@@ -1,5 +1,6 @@
 #include "Threading.h"
 #include "NonBlocking.h"
+#include "SocketSelector.h"
 
 void main() {
 
@@ -7,8 +8,9 @@ void main() {
 	//ESTABLECER CONEXION
 	sf::IpAddress ip = sf::IpAddress::getLocalAddress();
 	sf::TcpSocket socket;
+	vector<sf::TcpSocket*> s;
 	char connectionType, mode, prot;
-	Protocol protocol;
+	Protocol* protocol = nullptr;
 	string text1 = "\nConnected to: ";
 
 	cout << "Enter (s) for Server, Enter (c) for Client: ";
@@ -47,19 +49,20 @@ void main() {
 
 	switch (prot) {
 	case '1': //Threading
-		//protocol = Threading(&socket);
+		protocol = new Threading(&socket);
 		break;
 	case '2': //NonBlocking
-		protocol = NonBlocking(&socket);
+		protocol = new NonBlocking(&socket);
 		break;
 	case '3': //SocketSelector
-		//myProtocol = SocketSelector;
+		s.push_back(&socket);
+		protocol = new SocketSelector(s);
 		break;
 	default:
 		cout << "Error en el tipo de protocolo!\n";
 		break;
 	}
 
-	protocol.Run();
+	protocol->Run();
 
 }

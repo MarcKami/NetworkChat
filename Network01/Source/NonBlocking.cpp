@@ -1,7 +1,7 @@
 #include "NonBlocking.h"
 
 NonBlocking::NonBlocking(sf::TcpSocket* _socket) {
-	Protocol::socket = _socket;
+	socket = _socket;
 	socket->setBlocking(false);
 }
 
@@ -9,7 +9,7 @@ NonBlocking::~NonBlocking() {
 
 }
 
-void Protocol::Run() {
+void NonBlocking::Run(void) {
 
 	string sendText, receiveText;
 
@@ -87,12 +87,11 @@ void Protocol::Run() {
 			}
 		}
 
+		window.draw(separator);
+
 		sf::Packet toReceive;
 		sf::Socket::Status status = socket->receive(toReceive);
-		if (status == sf::Socket::NotReady) {
-			continue;
-		}
-		else if (status == sf::Socket::Done) {
+		if (status == sf::Socket::Done) {
 			toReceive >> receiveText;
 			messageReceived = { receiveText, other };
 			aMensajes.push_back(messageReceived);
@@ -104,7 +103,6 @@ void Protocol::Run() {
 			break;
 		}
 
-		window.draw(separator);
 #pragma endregion
 
 #pragma region DrawMessages
