@@ -122,11 +122,14 @@
     <ClCompile Include="Source\Main.cpp" />
     <ClCompile Include="Source\NonBlocking.cpp" />
     <ClCompile Include="Source\Protocol.cpp" />
+    <ClCompile Include="Source\SocketSelector.cpp" />
     <ClCompile Include="Source\Threading.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\NonBlocking.h" />
     <ClInclude Include="Source\Protocol.h" />
+    <ClInclude Include="Source\Receptor.hpp" />
+    <ClInclude Include="Source\SocketSelector.h" />
     <ClInclude Include="Source\Threading.h" />
     <ClInclude Include="Source\Utils.hpp" />
   </ItemGroup>

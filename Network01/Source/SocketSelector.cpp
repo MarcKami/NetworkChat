@@ -11,7 +11,7 @@ SocketSelector::~SocketSelector() {
 void SocketSelector::Run(void) {
 
 	string sendText;
-	size_t received;
+	size_t received = 0;
 
 	vector<pair<string, originText>> aMensajes;
 	pair<string, originText> message;
@@ -58,25 +58,29 @@ void SocketSelector::Run(void) {
 				else if (evento.key.code == sf::Keyboard::Return) {
 					if (mensaje == " > exit") {
 						sendText = "The other user has disconnected";
-						for each (sf::TcpSocket* s in sockets)
-						{
+						for each (sf::TcpSocket* s in sockets) {
 							s->send(sendText.c_str(), sendText.length());
 						}
 						window.close();
 					}
 					else {
 						message = { mensaje, mine };
+						mu.lock();
 						aMensajes.push_back(message);
 						if (aMensajes.size() > 25) {
 							aMensajes.erase(aMensajes.begin(), aMensajes.begin() + 1);
 						}
+						mu.unlock();
 						//SEND
 						sendText = mensaje;
-						for each (sf::TcpSocket* s in sockets)
-						{
+						for each (sf::TcpSocket* s in sockets) {
 							sf::Socket::Status status = s->send(sendText.c_str(), sendText.length());
-							if (status != sf::Socket::Done) {
+							if (status == sf::Socket::Error) {
 								cout << "Ha fallado el envio de datos\n";
+							}
+							else if (status == sf::Socket::Disconnected) {
+								cout << "Ha fallado el envio de datos\n";
+								s->disconnect();
 							}
 						}
 						mensaje = " > ";
@@ -97,7 +101,7 @@ void SocketSelector::Run(void) {
 #pragma region DrawMessages
 		for (size_t i = 0; i < aMensajes.size(); i++) {
 			string chatting = aMensajes[i].first;
-			chattingText.setPosition(sf::Vector2f(0, 20 * i));
+			chattingText.setPosition(sf::Vector2f(0, 20 * (float)i));
 			chattingText.setString(chatting);
 			if (aMensajes[i].second == mine) {
 				chattingText.setFillColor(MINE_COLOR);
@@ -115,5 +119,10 @@ void SocketSelector::Run(void) {
 		window.display();
 		window.clear();
 	}
+
+	for each (sf::TcpSocket* s in sockets) {
+		s->disconnect();
+	}
+
 	t.join();
 }

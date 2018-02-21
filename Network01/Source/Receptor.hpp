@@ -1,6 +1,7 @@
 #pragma once
 #include <SFML\Network.hpp>
 #include <iostream>
+#include <mutex>
 #include "Utils.hpp"
 
 using namespace utils;
@@ -14,8 +15,8 @@ public:
 	char receivedText[MAX_LENGTH];
 	size_t receivedLength;
 
-	Receptor_Threading(sf::TcpSocket* sock, vector<pair<string, originText>>* aMsj) : sock(sock),
-		aMsj(aMsj) {
+	Receptor_Threading(sf::TcpSocket* sock, vector<pair<string, originText>>* aMsj) :	sock(sock),
+																						aMsj(aMsj) {
 	}
 
 	void operator() () {
@@ -30,12 +31,14 @@ public:
 			}
 			else {
 				message = { receivedText, other };
+				mu.lock();
 				aMsj->push_back(message);
 				for (int i = 0; i < MAX_LENGTH; i++)
 					receivedText[i] = ' ';
 				if (aMsj->size() > 25) {
 					aMsj->erase(aMsj->begin(), aMsj->begin() + 1);
 				}
+				mu.unlock();
 			}
 		}
 	}

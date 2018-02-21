@@ -108,7 +108,7 @@ void NonBlocking::Run(void) {
 #pragma region DrawMessages
 		for (size_t i = 0; i < aMensajes.size(); i++) {
 			string chatting = aMensajes[i].first;
-			chattingText.setPosition(sf::Vector2f(0, 20 * i));
+			chattingText.setPosition(sf::Vector2f(0, 20 * (float)i));
 			chattingText.setString(chatting);
 			if (aMensajes[i].second == mine) {
 				chattingText.setFillColor(MINE_COLOR);
@@ -126,4 +126,8 @@ void NonBlocking::Run(void) {
 		window.display();
 		window.clear();
 	}
+
+
+	socket->disconnect();
+
 }

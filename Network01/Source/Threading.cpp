@@ -11,7 +11,7 @@ Threading::~Threading() {
 void Threading::Run(void) {
 
 	string sendText;
-	size_t received;
+	size_t received = 0;
 
 	vector<pair<string, originText>> aMensajes;
 	pair<string, originText> message;
@@ -63,10 +63,12 @@ void Threading::Run(void) {
 					}
 					else {
 						message = { mensaje, mine };
+						mu.lock();
 						aMensajes.push_back(message);
 						if (aMensajes.size() > 25) {
 							aMensajes.erase(aMensajes.begin(), aMensajes.begin() + 1);
 						}
+						mu.unlock();
 						//SEND
 						sendText = mensaje;
 						sf::Socket::Status status = socket->send(sendText.c_str(), sendText.length());
@@ -91,7 +93,7 @@ void Threading::Run(void) {
 #pragma region DrawMessages
 		for (size_t i = 0; i < aMensajes.size(); i++) {
 			string chatting = aMensajes[i].first;
-			chattingText.setPosition(sf::Vector2f(0, 20 * i));
+			chattingText.setPosition(sf::Vector2f(0, 20 * (float)i));
 			chattingText.setString(chatting);
 			if (aMensajes[i].second == mine) {
 				chattingText.setFillColor(MINE_COLOR);
@@ -109,5 +111,9 @@ void Threading::Run(void) {
 		window.display();
 		window.clear();
 	}
+
+
+	socket->disconnect();
+
 	t.join();
 }
