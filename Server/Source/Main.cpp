@@ -43,12 +43,14 @@ void main() {
 		}
 		else if (status == sf::Socket::Disconnected) {
 			cout << "Ha fallado el envio de datos\n";
+			//Borrar abans del aSockets
 			s->disconnect();
 		}
 	}
 
 	//DISCONNECT AL SALIR/CERRAR
 	for each (sf::TcpSocket* s in aSockets) {
+		//Borrar abans del aSockets
 		s->disconnect();
 	}
 
