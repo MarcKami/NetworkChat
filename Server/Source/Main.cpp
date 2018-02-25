@@ -1,4 +1,5 @@
 #include "Receptor.hpp"
+#include "Listener.hpp"
 
 void main() {
 
@@ -6,32 +7,14 @@ void main() {
 	//ESTABLECER CONEXION
 	sf::IpAddress ip = sf::IpAddress::getLocalAddress();
 	vector<sf::TcpSocket*> aSockets;
-	sf::TcpSocket incoming;
-	int users = 0;
 	vector<pair<string, originText>> aMensajes;
 
-	sf::TcpListener dispatcher;
-	sf::Socket::Status status = dispatcher.listen(PORT);
-	if (status != sf::Socket::Done) {
-		cout << "No se puede vincular al puerto 5000\n";
-	}
-
-	while (users < MAX_USERS) {
-		if (dispatcher.accept(incoming) != sf::Socket::Done) {
-			cout << "Error al aceptar conexión\n";
-		}
-		else {
-			users++;
-			aSockets.push_back(&incoming);
-		}
-	}
-
-	dispatcher.close();
-
+	Listen_Server l(aSockets);
+	thread t1(l);
 #pragma endregion
 
 	Receptor_Selection r(aSockets, &aMensajes);
-	thread t(r);
+	thread t2(r);
 
 	//SEND
 	sf::Packet sendData;
@@ -55,5 +38,6 @@ void main() {
 	}
 
 	//ESPERAR A QUE ACABE "T"
-	t.join();
+	t1.join();
+	t2.join();
 }
