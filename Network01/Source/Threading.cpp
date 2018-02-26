@@ -13,9 +13,11 @@ void Threading::Run(void) {
 	string sendText;
 	size_t received = 0;
 
-	vector<pair<string, originText>> aMensajes;
-	pair<string, originText> message;
+	vector<pair<string, string>> aMensajes;
+	pair<string, string> message;
+	string messageSend;
 	Receptor_Threading r(socket, &aMensajes);
+	sf::Packet myPacket;
 	thread t(r);
 
 #pragma region ScreenDisplay
@@ -57,21 +59,16 @@ void Threading::Run(void) {
 					window.close();
 				else if (evento.key.code == sf::Keyboard::Return) {
 					if (mensaje == " > exit") {
-						sendText = " > exit";
-						socket->send(sendText.c_str(), sendText.length());
+						messageSend = mensaje;
+						myPacket << nick << messageSend;
+						socket->send(myPacket);
 						window.close();
 					}
 					else {
-						message = { mensaje, mine };
-						mu.lock();
-						aMensajes.push_back(message);
-						if (aMensajes.size() > 25) {
-							aMensajes.erase(aMensajes.begin(), aMensajes.begin() + 1);
-						}
-						mu.unlock();
 						//SEND
-						sendText = mensaje;
-						sf::Socket::Status status = socket->send(sendText.c_str(), sendText.length());
+						messageSend = mensaje;
+						myPacket << nick << messageSend;
+						sf::Socket::Status status = socket->send(myPacket);
 						if (status != sf::Socket::Done) {
 							cout << "Ha fallado el envio de datos\n";
 						}
@@ -93,9 +90,10 @@ void Threading::Run(void) {
 #pragma region DrawMessages
 		for (size_t i = 0; i < aMensajes.size(); i++) {
 			string chatting = aMensajes[i].first;
+			chatting += aMensajes[i].second;
 			chattingText.setPosition(sf::Vector2f(0, 20 * (float)i));
 			chattingText.setString(chatting);
-			if (aMensajes[i].second == mine) {
+			if (aMensajes[i].first == nick) {
 				chattingText.setFillColor(MINE_COLOR);
 			}
 			else {
@@ -111,7 +109,6 @@ void Threading::Run(void) {
 		window.display();
 		window.clear();
 	}
-
 
 	socket->disconnect();
 

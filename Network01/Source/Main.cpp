@@ -9,14 +9,23 @@ void main() {
 	sf::IpAddress ip = sf::IpAddress::getLocalAddress();
 	sf::TcpSocket socket;
 	Protocol* protocol = nullptr;
-	string nick;
 	sf::Packet sendPacket;
+	char* myNick = " ";
 
 	cout << "Enter your NickName: ";
 	cin >> nick;
-	
-	socket.connect(ip, PORT);
 
+	std::string temp(myNick);
+	nick = temp;
+
+	sf::Socket::Status status = socket.connect(ip, PORT);
+	if (status != sf::Socket::Done) {
+		std::cout << "Error de conexion\n";
+		exit(0);
+	}
+	else {
+		std::cout << "Conectado al chat\n";
+	}
 #pragma endregion
 
 	protocol = new Threading(&socket);

@@ -10,10 +10,6 @@ using namespace std;
 struct Receptor_Selection {
 public:
 	vector<pair<string, string>>* aMsj;
-	pair<string, string> message;
-	string nick;
-	string receivedText;
-	sf::Packet myPack;
 
 	Receptor_Selection(vector<pair<string, string>>* aMsj) : aMsj(aMsj){
 	}
@@ -23,9 +19,13 @@ public:
 		sf::TcpListener dispatcher;
 		vector<sf::TcpSocket*> sock;
 		sf::SocketSelector selector;
+		string nick = "";
+		string receivedText = "";
+		pair<string, string> message;
+		sf::Packet myPack;
 
-		sf::Socket::Status status = dispatcher.listen(PORT); 
-		if (status != sf::Socket::Done) {
+		//sf::Socket::Status status = dispatcher.listen(PORT); 
+		if (dispatcher.listen(PORT) != sf::Socket::Done) {
 			cout << "No se puede vincular al puerto 5000\n";
 		}
 		selector.add(dispatcher);
