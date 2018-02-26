@@ -122,7 +122,6 @@
     <ClCompile Include="Source\Main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Source\Listener.hpp" />
     <ClInclude Include="Source\Receptor.hpp" />
     <ClInclude Include="Source\Utils.hpp" />
   </ItemGroup>

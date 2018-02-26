@@ -13,8 +13,10 @@ void main() {
 	sf::Packet sendPacket;
 
 	cout << "Enter your NickName: ";
-	cin >> nick;	
-	socket.connect(ip, PORT);
+	cin >> nick;
+	
+	socket.connect(ip, PORT);
+
 #pragma endregion
 
 	protocol = new Threading(&socket);

@@ -57,7 +57,7 @@ void Threading::Run(void) {
 					window.close();
 				else if (evento.key.code == sf::Keyboard::Return) {
 					if (mensaje == " > exit") {
-						sendText = "The other user has disconnected";
+						sendText = " > exit";
 						socket->send(sendText.c_str(), sendText.length());
 						window.close();
 					}
