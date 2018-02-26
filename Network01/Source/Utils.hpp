@@ -4,6 +4,7 @@ namespace utils {
 
 	enum originText { mine, other };
 	static std::mutex mu;
+	static std::string nick;
 
 	#define SCREEN_WIDTH 800
 	#define SCREEN_HEIGHT 600

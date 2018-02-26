@@ -4,6 +4,7 @@ namespace utils {
 
 	enum originText { one, two, three, four };
 	static std::mutex mu;
+	static sf::Packet sendData;
 
 	#define SCREEN_WIDTH 800
 	#define SCREEN_HEIGHT 600

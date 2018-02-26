@@ -7,7 +7,7 @@ void main() {
 	//ESTABLECER CONEXION
 	sf::IpAddress ip = sf::IpAddress::getLocalAddress();
 	vector<sf::TcpSocket*> aSockets;
-	vector<pair<string, originText>> aMensajes;
+	vector<pair<string, string>> aMensajes;
 
 	Listen_Server l(aSockets);
 	thread t1(l);
@@ -16,18 +16,18 @@ void main() {
 	Receptor_Selection r(aSockets, &aMensajes);
 	thread t2(r);
 
-	//SEND
-	sf::Packet sendData;
-
-	for each (sf::TcpSocket* s in aSockets) {
-		sf::Socket::Status status = s->send(sendData);
-		if (status == sf::Socket::Error) {
-			cout << "Ha fallado el envio de datos\n";
-		}
-		else if (status == sf::Socket::Disconnected) {
-			cout << "Ha fallado el envio de datos\n";
-			//Borrar abans del aSockets
-			s->disconnect();
+	while (aSockets.size = !0) {
+		//SEND
+		for each (sf::TcpSocket* s in aSockets) {
+			sf::Socket::Status status = s->send(sendData);
+			if (status == sf::Socket::Error) {
+				cout << "Ha fallado el envio de datos\n";
+			}
+			else if (status == sf::Socket::Disconnected) {
+				cout << "Ha fallado el envio de datos\n";
+				//Borrar abans del aSockets
+				s->disconnect();
+			}
 		}
 	}
 

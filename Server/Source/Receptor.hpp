@@ -11,13 +11,13 @@ struct Receptor_Selection {
 public:
 	vector<sf::TcpSocket*> sock;
 	sf::SocketSelector selector;
-	vector<pair<string, originText>>* aMsj;
-	pair<string, originText> message;
+	vector<pair<string, string>>* aMsj;
+	pair<string, string> message;
 	string nick;
 	string receivedText;
 
-	Receptor_Selection(vector<sf::TcpSocket*> sock, vector<pair<string, originText>>* aMsj) :	sock(sock),
-																								aMsj(aMsj) {
+	Receptor_Selection(vector<sf::TcpSocket*> sock, vector<pair<string, string>>* aMsj) :	sock(sock),
+																							aMsj(aMsj) {
 		for each (sf::TcpSocket* s in sock) {
 			selector.add(*s);
 		}
@@ -37,8 +37,9 @@ public:
 						continue;
 					}
 					else{
+						sendData = receivedPacket;
 						receivedPacket >> nick >> receivedText;
-						message = { receivedText, one };
+						message = { nick, receivedText };
 						mu.lock();
 						aMsj->push_back(message);
 						if (aMsj->size() > 25) {
