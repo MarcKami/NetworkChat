@@ -11,6 +11,12 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Server_P2P", "Server_P2P\Se
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Client_P2P", "Client_P2P\Client_P2P.vcxproj", "{4687F8D7-996A-4947-A524-5182C5B1594E}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{16BB14A0-5DE9-4FEE-9FEA-676D3F69B14B}"
+	ProjectSection(SolutionItems) = preProject
+		lib\Direction.h = lib\Direction.h
+		lib\Utils.h = lib\Utils.h
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64

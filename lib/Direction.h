@@ -4,10 +4,11 @@
 
 struct Direction {
 
-	Direction(sf::IpAddress ip, unsigned short port) :	ip(ip),
-														PORT(port){
+	Direction(std::string ip, unsigned short port) :	ip(ip),
+														port(port){
 	}
+	Direction() = default;
 
-	sf::IpAddress ip;
-	unsigned short PORT;
+	std::string ip;
+	unsigned short port;
 };

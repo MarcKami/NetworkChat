@@ -1,5 +1,7 @@
 #pragma once
 
+using namespace std;
+
 namespace utils {
 
 	#define SCREEN_WIDTH 800
