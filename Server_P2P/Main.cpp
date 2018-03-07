@@ -42,7 +42,7 @@ void main() {
 
 	//Disconnect server
 	//listener.close();
-	for (int i = 0; i < MAX_PLAYERS; i++)
-		sock[i].disconnect();
-	delete[] sock;
+	//for (int i = 0; i < MAX_PLAYERS; i++)
+	//	sock[i].disconnect();
+	//delete[] sock;
 }
