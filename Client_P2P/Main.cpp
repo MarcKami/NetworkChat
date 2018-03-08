@@ -71,7 +71,8 @@ void main() {
 	sf::Vector2i screenDimensions(SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	sf::RenderWindow window;
-	window.create(sf::VideoMode(screenDimensions.x, screenDimensions.y), "Chat");
+	string windowName = "Chat " + nick;
+	window.create(sf::VideoMode(screenDimensions.x, screenDimensions.y), windowName);
 
 	sf::Font font;
 	if (!font.loadFromFile("courbd.ttf")) {
