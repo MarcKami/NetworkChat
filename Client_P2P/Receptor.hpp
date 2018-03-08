@@ -29,16 +29,17 @@ public:
 		for (int i = 0; i < MAX_LENGTH; i++)
 			receivedText[i] = ' ';
 		while (!end) {
+			int toDelete = -1;
 			if (sock.size() == 0) {
 				end = true;
 				break;
 			}
 			if(selector.wait()) {
-				for each (sf::TcpSocket* s in sock) {
-					if (selector.isReady(*s)) {
-						sf::Socket::Status status = s->receive(receivedText, MAX_LENGTH, receivedLength);
+				for(int i = 0; i < sock.size(); i++){
+					if (selector.isReady(*sock[i])) {
+						sf::Socket::Status status = sock[i]->receive(receivedText, MAX_LENGTH, receivedLength);
 						if (status == sf::Socket::Done) {
-							message = { receivedText, 0 };
+							message = { receivedText, i };
 							mu.lock();
 							aMsj->push_back(message);
 							for (int i = 0; i < MAX_LENGTH; i++)
@@ -49,7 +50,9 @@ public:
 							mu.unlock();
 						}
 						else if (status == sf::Socket::Disconnected) {
-							selector.remove(*s);
+							selector.remove(*sock[i]);
+							sock[i]->disconnect();
+							toDelete = i;
 							std::cout << "Elimino el socket que se ha desconectado" << endl;
 						} 
 						else{
@@ -58,6 +61,8 @@ public:
 					}
 				}
 			}
+			if (toDelete != -1)
+				sock.erase(sock.begin() + toDelete);
 		}
 	}
 };
