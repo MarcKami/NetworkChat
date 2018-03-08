@@ -50,10 +50,9 @@ public:
 	char receivedText[MAX_LENGTH];
 	size_t receivedLength;
 
-	Receptor_Selection(vector<sf::TcpSocket*> sock, vector<pair<string, originText>>* aMsj) : sock(sock),
-		aMsj(aMsj) {
-		for each (sf::TcpSocket* s in sock)
-		{
+	Receptor_Selection(vector<sf::TcpSocket*> sock, vector<pair<string, originText>>* aMsj) :	sock(sock),
+																								aMsj(aMsj) {
+		for each (sf::TcpSocket* s in sock) {
 			selector.add(*s);
 		}
 	}

@@ -3,28 +3,6 @@
 #include "Direction.h"
 #include "Utils.h"
 
-//void RecieveClients(sf::TcpListener* listener, vector<Direction>* aPeers, sf::TcpSocket* sock) {
-//	for (int i = 0; i < MAX_PLAYERS; i++) {
-//		listener->accept(sock[i]);
-//		Direction d(sock[i].getRemoteAddress().toString(), sock[i].getRemotePort());
-//		cout << "Socket " << i << ": IP - " << d.ip << " PORT - " << d.port << endl;
-//		aPeers->push_back(d);
-//	}
-//}
-//
-//void ConnectClients(vector<Direction> aPeers, sf::TcpSocket* sock) {
-//	for (int i = 0; i < MAX_PLAYERS; i++) {
-//		sf::Packet pack;
-//		int idx = 0;
-//		pack << MAX_PLAYERS - 1;
-//		for (int j = 0; j < MAX_PLAYERS; j++) {
-//			if (j != i)
-//				pack << aPeers[j].ip << aPeers[j].port;
-//		}
-//		sock[i].send(pack);
-//	}
-//}
-
 void main() {
 	//ESTABLECER CONEXION
 	vector<Direction> aPeers;
@@ -39,18 +17,24 @@ void main() {
 	for (int i = 0; i < MAX_PLAYERS; i++) {
 		sf::TcpSocket sock;
 		listener.accept(sock);
-		Direction d(sock.getRemoteAddress().toString(), sock.getRemotePort());
-		cout << "Socket " << i << ": IP - " << d.ip << " PORT - " << d.port << endl;
+		//Nickname
+		char receivedText[MAX_LENGTH];
+		size_t receivedLength;
+		sock.receive(receivedText, MAX_LENGTH, receivedLength);
+		string nick = receivedText;
+		Direction d(nick, sock.getRemoteAddress().toString(), sock.getRemotePort());
+		cout << "Socket " << nick << ": IP - " << d.ip << " PORT - " << d.port << endl;
 
 		sf::Packet pack;
 		pack << i;
 		for (int j = 0; j < i; j++) {
-			pack << aPeers[j].ip << aPeers[j].port;
+			pack << aPeers[j].nick << aPeers[j].ip << aPeers[j].port;
 		}
 		sock.send(pack);
 		aPeers.push_back(d);
 
 		sock.disconnect();
 	}
+
 	listener.close();
 }
