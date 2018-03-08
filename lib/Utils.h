@@ -21,5 +21,5 @@ namespace utils {
 	#define MINE_COLOR sf::Color(0, 160, 0)
 	#define COLOR_0 sf::Color(0, 160, 160)
 	#define COLOR_1 sf::Color(160, 0, 0)
-	#define COLOR_2 sf::Color(0, 0, 160)
+	#define COLOR_2 sf::Color(200, 200, 200)
 }
