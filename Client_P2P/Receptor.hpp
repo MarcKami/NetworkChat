@@ -25,13 +25,14 @@ public:
 	}
 
 	void operator() () {
-		bool end = false;
+		utils::end = false; 
+		int toDelete = -1;
 		for (int i = 0; i < MAX_LENGTH; i++)
 			receivedText[i] = ' ';
-		while (!end) {
-			int toDelete = -1;
+		while (!utils::end) {
+			
 			if (sock.size() == 0) {
-				end = true;
+				utils::end = true;
 				break;
 			}
 			if(selector.wait()) {
@@ -61,8 +62,10 @@ public:
 					}
 				}
 			}
-			if (toDelete != -1)
+			if (toDelete != -1) {
 				sock.erase(sock.begin() + toDelete);
+				toDelete = -1;
+			}
 		}
 	}
 };

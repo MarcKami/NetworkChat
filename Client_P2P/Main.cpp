@@ -17,7 +17,6 @@ void main() {
 	sf::TcpSocket serverSock;
 	sf::IpAddress ip = sf::IpAddress::getLocalAddress();
 	sf::TcpListener listener;
-	std::string nick;
 
 	std::cout << "Enter your NickName:" << endl;
 	std::cin >> nick;
@@ -100,7 +99,8 @@ void main() {
 	vector<pair<string, int>> aMensajes;
 	pair<string, int> message;
 	Receptor r(sock, &aMensajes);
-	thread t(r);
+	thread t(r); 
+	int toDelete = -1;
 
 #pragma region InteractionLoop
 	while (window.isOpen()) {
@@ -108,17 +108,29 @@ void main() {
 		while (window.pollEvent(evento)) {
 			switch (evento.type) {
 			case sf::Event::Closed:
+				sendText = nick + " has disconnected";
+				for each (sf::TcpSocket* s in sock) {
+					s->send(sendText.c_str(), sendText.length());
+				}
+				utils::end = true;
 				window.close();
 				break;
 			case sf::Event::KeyPressed:
-				if (evento.key.code == sf::Keyboard::Escape)
+				if (evento.key.code == sf::Keyboard::Escape) {
+					sendText = nick + " has disconnected";
+					for each (sf::TcpSocket* s in sock) {
+						s->send(sendText.c_str(), sendText.length());
+					}
+					utils::end = true;
 					window.close();
+				}
 				else if (evento.key.code == sf::Keyboard::Return) {
 					if (mensaje == "exit") {
 						sendText = nick + " has disconnected";
 						for each (sf::TcpSocket* s in sock) {
 							s->send(sendText.c_str(), sendText.length());
 						}
+						utils::end = true;
 						window.close();
 					}
 					else {
@@ -132,15 +144,20 @@ void main() {
 						mu.unlock();
 						//SEND
 						sendText = mensaje;
-						for each (sf::TcpSocket* s in sock) {
-							sf::Socket::Status status = s->send(sendText.c_str(), sendText.length());
+						for (int i = 0; i < sock.size(); i++) {
+							sf::Socket::Status status = sock[i]->send(sendText.c_str(), sendText.length());
 							if (status == sf::Socket::Error) {
-								cout << "Ha fallado el envio de datos\n";
+								cout << "Ha fallado el envio de datos" << endl;
 							}
 							else if (status == sf::Socket::Disconnected) {
-								cout << "Ha fallado el envio de datos\n";
-								s->disconnect();
+								cout << "Se ha desconectado " << sock[i]->getRemotePort() << endl;
+								sock[i]->disconnect();
+								toDelete = i;
 							}
+						}
+						if (toDelete != -1) {
+							sock.erase(sock.begin() + toDelete);
+							toDelete = -1;
 						}
 						sendText = "";
 						mensaje = "";
