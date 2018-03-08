@@ -28,12 +28,12 @@ void main() {
 			for (int i = 0; i < players; i++) {
 				sf::TcpSocket* auxSock = new sf::TcpSocket();
 				peers >> dir[i].ip >> dir[i].port;
-				cout << "Socket " << i << ": IP - " << dir[i].ip << " PORT - " << dir[i].port << endl;
 				if (auxSock->connect(ip, dir[i].port) != sf::Socket::Done) {
 					cout << "Imposible conectar al peer: " << i << endl;
 				}
 				else {
 					cout << "Conexion con exito al peer: " << i << endl;
+					cout << "Socket " << i << ": IP - " << auxSock->getRemoteAddress().toString() << " PORT - " << auxSock->getRemotePort() << endl;
 					sock.push_back(auxSock);
 				}
 			}
@@ -42,15 +42,14 @@ void main() {
 			}
 			for (int i = 0; i < MAX_PLAYERS - 1 - players; i++) {
 				sf::TcpSocket* auxSock = new sf::TcpSocket();
-				if (listener.accept(*auxSock) == sf::Socket::Done)
+				if (listener.accept(*auxSock) == sf::Socket::Done) {
 					sock.push_back(auxSock);
+					cout << "Conexion con exito al peer: " << players + i << endl;
+					cout << "Socket " << i << ": IP - " << auxSock->getRemoteAddress().toString() << " PORT - " << auxSock->getRemotePort() << endl;
+				}
 			}
 			listener.close();
 		}
-	}
-
-	for each (sf::TcpSocket* s in sock) {
-		cout << "Socket: IP - " << s->getRemoteAddress().toString() << " PORT - " << s->getRemotePort() << endl;
 	}
 
 	int xwfw;
