@@ -10,35 +10,28 @@ using namespace std;
 
 struct Receptor {
 public:
-	vector<sf::TcpSocket*> sock;
+	vector<sf::TcpSocket*>* sock;
 	sf::SocketSelector selector;
 	vector<pair<string, int>>* aMsj;
 	pair<string, int> message;
 	char receivedText[MAX_LENGTH];
 	size_t receivedLength;
 
-	Receptor(vector<sf::TcpSocket*> sock, vector<pair<string, int>>* aMsj) :	sock(sock),
+	Receptor(vector<sf::TcpSocket*>* sock, vector<pair<string, int>>* aMsj) :	sock(sock),
 																				aMsj(aMsj) {
-		for each (sf::TcpSocket* s in sock) {
+		for each (sf::TcpSocket* s in *sock) {
 			selector.add(*s);
 		}
 	}
 
 	void operator() () {
-		utils::end = false; 
-		int toDelete = -1;
 		for (int i = 0; i < MAX_LENGTH; i++)
 			receivedText[i] = ' ';
-		while (!utils::end) {
-			
-			if (sock.size() == 0) {
-				utils::end = true;
-				break;
-			}
+		while (sock->size() != 0) {
 			if(selector.wait()) {
-				for(int i = 0; i < sock.size(); i++){
-					if (selector.isReady(*sock[i])) {
-						sf::Socket::Status status = sock[i]->receive(receivedText, MAX_LENGTH, receivedLength);
+				for(int i = 0; i < sock->size(); i++){
+					if (selector.isReady(*sock->at(i))) {
+						sf::Socket::Status status = sock->at(i)->receive(receivedText, MAX_LENGTH, receivedLength);
 						if (status == sf::Socket::Done) {
 							message = { receivedText, i };
 							mu.lock();
@@ -51,20 +44,17 @@ public:
 							mu.unlock();
 						}
 						else if (status == sf::Socket::Disconnected) {
-							selector.remove(*sock[i]);
-							sock[i]->disconnect();
-							toDelete = i;
+							selector.remove(*sock->at(i));
+							sock->at(i)->disconnect();
+							sock->erase(sock->begin() + i);
 							std::cout << "Elimino el socket que se ha desconectado" << endl;
+							break;
 						} 
 						else{
 							cout << "Error al recibir mensaje" << endl;
 						}
 					}
 				}
-			}
-			if (toDelete != -1) {
-				sock.erase(sock.begin() + toDelete);
-				toDelete = -1;
 			}
 		}
 	}

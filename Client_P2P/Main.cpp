@@ -98,12 +98,13 @@ void main() {
 
 	vector<pair<string, int>> aMensajes;
 	pair<string, int> message;
-	Receptor r(sock, &aMensajes);
+	Receptor r(&sock, &aMensajes);
 	thread t(r); 
-	int toDelete = -1;
 
 #pragma region InteractionLoop
 	while (window.isOpen()) {
+		if (sock.size() == 0)
+			window.close();
 		sf::Event evento;
 		while (window.pollEvent(evento)) {
 			switch (evento.type) {
@@ -112,7 +113,6 @@ void main() {
 				for each (sf::TcpSocket* s in sock) {
 					s->send(sendText.c_str(), sendText.length());
 				}
-				utils::end = true;
 				window.close();
 				break;
 			case sf::Event::KeyPressed:
@@ -121,7 +121,6 @@ void main() {
 					for each (sf::TcpSocket* s in sock) {
 						s->send(sendText.c_str(), sendText.length());
 					}
-					utils::end = true;
 					window.close();
 				}
 				else if (evento.key.code == sf::Keyboard::Return) {
@@ -130,7 +129,6 @@ void main() {
 						for each (sf::TcpSocket* s in sock) {
 							s->send(sendText.c_str(), sendText.length());
 						}
-						utils::end = true;
 						window.close();
 					}
 					else {
@@ -152,12 +150,7 @@ void main() {
 							else if (status == sf::Socket::Disconnected) {
 								cout << "Se ha desconectado " << sock[i]->getRemotePort() << endl;
 								sock[i]->disconnect();
-								toDelete = i;
 							}
-						}
-						if (toDelete != -1) {
-							sock.erase(sock.begin() + toDelete);
-							toDelete = -1;
 						}
 						sendText = "";
 						mensaje = "";
@@ -208,6 +201,8 @@ void main() {
 	for each (sf::TcpSocket* s in sock) {
 		s->disconnect();
 	}
+
+	sock.clear();
 
 	t.join();
 }

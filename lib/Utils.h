@@ -7,9 +7,7 @@ namespace utils {
 
 	static std::mutex mu;
 	static std::string nick;
-
-	static bool end;
-
+	
 	#define SCREEN_WIDTH 800
 	#define SCREEN_HEIGHT 600
 
